@@ -5,7 +5,7 @@
     xmlns:local="using:_8bitdo_gamepad"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" x:Name="Mainpage" Background="Black" KeyDown="mainpage_KeyDown" VerticalAlignment="Top" Width="Auto" PointerMoved="Mainpage_PointerMoved">
+    mc:Ignorable="d" x:Name="Mainpage" Background="Black" KeyDown="Mainpage_KeyDown" VerticalAlignment="Top" Width="Auto" PointerMoved="Mainpage_PointerMoved">
 
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
@@ -46,7 +46,7 @@
                     <ProgressBar Name="pbLeftThumbstickX" Height="5" Minimum="-1" Maximum="1" Canvas.Left="91" Canvas.Top="344" Foreground="#FF00D74E" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
                     <ProgressBar Name="pbLeftThumbstickY" Height="5" Minimum="-1" Maximum="1" Canvas.Left="92" Canvas.Top="345" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Foreground="#FF00D74E" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="Global User Interface" Margin="0,0,0,0" >
                         <ProgressBar.RenderTransform>
-                            <CompositeTransform Rotation="-89.789"/>
+                            <CompositeTransform Rotation="-90"/>
                         </ProgressBar.RenderTransform>
                     </ProgressBar>
 

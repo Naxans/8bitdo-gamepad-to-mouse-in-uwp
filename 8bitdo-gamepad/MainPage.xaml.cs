@@ -43,11 +43,18 @@ namespace _8bitdo_gamepad
         double ScreenWidth;
         double ScreenHeight;
         double scaleFactor;
+        int DelayReadingGamepad = 50; //milliseconds
 
         Gamepad controller;
         GamepadReading reading;
-        DispatcherTimer dispatcherTimer;
-        TimeSpan period = TimeSpan.FromMilliseconds(1);
+        //DispatcherTimer dispatcherTimer;
+        //TimeSpan period = TimeSpan.FromMilliseconds(2);
+
+        /// <summary>
+        /// Allows a loop to execute asynchronously to the main part of the application.
+        /// </summary>
+        private Task _run;
+
         public MainPage()
         {
             //minimsize titlebar and taskbar to a small blue block when hoover top or bottm of the screen
@@ -71,10 +78,10 @@ namespace _8bitdo_gamepad
 
             this.InitializeComponent();
 
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Interval = period;
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Start();
+            //dispatcherTimer = new DispatcherTimer();
+            //dispatcherTimer.Interval = period;
+            //dispatcherTimer.Tick += dispatcherTimer_Tick;
+            //dispatcherTimer.Start();
 
             //public static event EventHandler<Gamepad> GamepadAdded
             Gamepad.GamepadAdded += Gamepad_GamepadAdded;
@@ -115,6 +122,9 @@ namespace _8bitdo_gamepad
             e.HeadsetDisconnected += E_HeadsetDisconnected;
             e.UserChanged += E_UserChanged;
             await Log("Gamepad Added");
+            this.controller = e;
+            this._run = new Task(this.ReadingGamepad);
+            this._run.Start();
         }
 
         private async void Gamepad_GamepadRemoved(object sender, Gamepad e)
@@ -138,97 +148,120 @@ namespace _8bitdo_gamepad
 
         #endregion
 
-
-        private void dispatcherTimer_Tick(object sender, object e)
+        InjectedInputMouseInfo info1;
+        //private void dispatcherTimer_Tick(object sender, object e)
+        private async void ReadingGamepad()
         {
-            if (Gamepad.Gamepads.Count > 0)
+            //if (Gamepad.Gamepads.Count > 0)
+            while (true)
             {
+
                 controller = Gamepad.Gamepads.First();
-                reading = controller.GetCurrentReading();
+                if (controller == null) { break; }
+                reading = this.controller.GetCurrentReading();
 
-                pbLeftThumbstickX.Value = reading.LeftThumbstickX;
-                pbLeftThumbstickY.Value = reading.LeftThumbstickY;
-
-                pbRightThumbstickX.Value = reading.RightThumbstickX;
-                pbRightThumbstickY.Value = reading.RightThumbstickY;
-
-                pbLeftTrigger.Value = reading.LeftTrigger;
-                pbRightTrigger.Value = reading.RightTrigger;
-
-                //https://msdn.microsoft.com/en-us/library/windows/apps/windows.gaming.input.gamepadbuttons.aspx
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.A), lblA);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.B), lblB);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.X), lblX);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Y), lblY);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Menu), lblMenu);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadLeft), lblDPadLeft);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadRight), lblDPadRight);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadUp), lblDPadUp);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadDown), lblDPadDown);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.View), lblView);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightThumbstick), ellRightThumbstick);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftThumbstick), ellLeftThumbstick);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftShoulder), rectLeftShoulder);
-                ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightShoulder), recRightShoulder);
-
-
-                if (reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone || reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone)
+                // UI and the task run at different levels.
+                // Therefore, the dispatcher must input data
+                // and the data from the ViewModel binding Async be treated.
+                await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
                 {
-                    Debug.WriteLine("x= " + (int)x + " y= " + (int)y);
-                    if ((reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone) && x >= 0 && x <= ScreenWidth)
+                    pbLeftThumbstickX.Value = reading.LeftThumbstickX;
+                    pbLeftThumbstickY.Value = reading.LeftThumbstickY;
+
+
+                    pbRightThumbstickX.Value = reading.RightThumbstickX;
+                    pbRightThumbstickY.Value = reading.RightThumbstickY;
+
+                    pbLeftTrigger.Value = reading.LeftTrigger;
+                    pbRightTrigger.Value = reading.RightTrigger;
+
+                    //https://msdn.microsoft.com/en-us/library/windows/apps/windows.gaming.input.gamepadbuttons.aspx
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.A), lblA);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.B), lblB);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.X), lblX);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Y), lblY);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Menu), lblMenu);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadLeft), lblDPadLeft);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadRight), lblDPadRight);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadUp), lblDPadUp);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadDown), lblDPadDown);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.View), lblView);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightThumbstick), ellRightThumbstick);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftThumbstick), ellLeftThumbstick);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftShoulder), rectLeftShoulder);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightShoulder), recRightShoulder);
+
+                    //// prevent the cursor from going outside the window of the app
+                    //if (x < 0) { x = 0; }
+                    //if (x > ScreenWidth) { x = ScreenWidth; }
+                    //if (y < 0) { y = 0; }
+                    //if (y > ScreenHeight) { y = ScreenHeight; }
+
+                    if (reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone || reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone)
+                    {
+                        Debug.WriteLine("x= " + (int)x + " y= " + (int)y);
+                        info1 = new InjectedInputMouseInfo();
+                        info1.MouseOptions = InjectedInputMouseOptions.Move;
+                        if ((reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone) && x >= 0 && x <= ScreenWidth)
+                        {
+                            //info1 = new InjectedInputMouseInfo();
+                            //info1.MouseOptions = InjectedInputMouseOptions.Move;
+                            info1.DeltaX = (int)(reading.LeftThumbstickX * 10);
+                            //InputInjector inputInjector = InputInjector.TryCreate();
+                            //inputInjector.InjectMouseInput(new[] { info1 });
+                            Debug.WriteLine("info.DeltaX  = " + info1.DeltaX);
+                        }
+                        if ((reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone) && y >= 0 && y <= ScreenHeight)
+                        {
+                            //info1 = new InjectedInputMouseInfo();
+                            //info1.MouseOptions = InjectedInputMouseOptions.Move;
+                            info1.DeltaY = (int)(-reading.LeftThumbstickY * 10);
+                            //InputInjector inputInjector = InputInjector.TryCreate();
+                            //inputInjector.InjectMouseInput(new[] { info1 });
+                            Debug.WriteLine("info.DeltaY = " + info1.DeltaY);
+                        }
+                        InputInjector inputInjector = InputInjector.TryCreate();
+                        inputInjector.InjectMouseInput(new[] { info1 });
+                    }
+                    if (reading.Buttons.HasFlag(GamepadButtons.RightShoulder) == true)
                     {
                         var info = new InjectedInputMouseInfo();
-                        info.MouseOptions = InjectedInputMouseOptions.Move;
-                        info.DeltaX = (int)(reading.LeftThumbstickX * 10);
+                        info.MouseOptions = InjectedInputMouseOptions.Wheel;
+                        unchecked
+                        {
+                            info.MouseData = (uint)+50; //scroll up
+                        }
                         InputInjector inputInjector = InputInjector.TryCreate();
                         inputInjector.InjectMouseInput(new[] { info });
-                        Debug.WriteLine("info.DeltaX  = " + info.DeltaX);
+                        Debug.WriteLine("gamepadsbutton Y wheel up or down");
                     }
-                    if ((reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone) && y >= 0 && y <= ScreenHeight)
+                    else if (reading.Buttons.HasFlag(GamepadButtons.LeftShoulder) == true)
                     {
                         var info = new InjectedInputMouseInfo();
-                        info.MouseOptions = InjectedInputMouseOptions.Move;
-                        info.DeltaY = (int)(-reading.LeftThumbstickY * 10);
+                        info.MouseOptions = InjectedInputMouseOptions.Wheel;
+                        unchecked
+                        {
+                            info.MouseData = (uint)-50; //scroll down
+                        }
                         InputInjector inputInjector = InputInjector.TryCreate();
                         inputInjector.InjectMouseInput(new[] { info });
-                        Debug.WriteLine("info.DeltaY = " + info.DeltaY);
+                        Debug.WriteLine("gamepadsbutton X wheel left or right");
                     }
-                }
-                if (reading.Buttons.HasFlag(GamepadButtons.Y) == true)
-                {
-                    var info = new InjectedInputMouseInfo();
-                    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-                    unchecked
+                    else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
                     {
-                        info.MouseData = (uint)+50; //scroll up
+                        var down = new InjectedInputMouseInfo();
+                        down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+                        var up = new InjectedInputMouseInfo();
+                        up.MouseOptions = InjectedInputMouseOptions.LeftUp;
+                        InputInjector inputInjector = InputInjector.TryCreate();
+                        inputInjector.InjectMouseInput(new[] { down, up });
+                        Debug.WriteLine("gamepadsbutton A pressed");
                     }
-                    InputInjector inputInjector = InputInjector.TryCreate();
-                    inputInjector.InjectMouseInput(new[] { info });
-                    Debug.WriteLine("gamepadsbutton Y wheel up or down");
-                }
-                else if (reading.Buttons.HasFlag(GamepadButtons.X) == true)
-                {
-                    var info = new InjectedInputMouseInfo();
-                    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-                    unchecked
-                    {
-                        info.MouseData = (uint)-50; //scroll down
-                    }
-                    InputInjector inputInjector = InputInjector.TryCreate();
-                    inputInjector.InjectMouseInput(new[] { info });
-                    Debug.WriteLine("gamepadsbutton X wheel left or right");
-                }
-                else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
-                {
-                    var down = new InjectedInputMouseInfo();
-                    down.MouseOptions = InjectedInputMouseOptions.LeftDown;
-                    var up = new InjectedInputMouseInfo();
-                    up.MouseOptions = InjectedInputMouseOptions.LeftUp;
-                    InputInjector inputInjector = InputInjector.TryCreate();
-                    inputInjector.InjectMouseInput(new[] { down, up });
-                    Debug.WriteLine("gamepadsbutton A pressed");
-                }
+                });
+                // delay while loop interval
+                await Task.Delay(DelayReadingGamepad);
             }
+
 
         }
 
@@ -264,77 +297,77 @@ namespace _8bitdo_gamepad
 
         //private async void mainpage_KeyUp(CoreWindow sender, KeyEventArgs args)
         //{
-            ////if (args.VirtualKey == VirtualKey.GamepadB)
-            ////    args.Handled = true;
+        ////if (args.VirtualKey == VirtualKey.GamepadB)
+        ////    args.Handled = true;
 
-            //await Task.Delay(0);
-            //if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
-            //{
-            //    //var down = new InjectedInputMouseInfo();
-            //    //down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+        //await Task.Delay(0);
+        //if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
+        //{
+        //    //var down = new InjectedInputMouseInfo();
+        //    //down.MouseOptions = InjectedInputMouseOptions.LeftDown;
 
-            //    //var up = new InjectedInputMouseInfo();
-            //    //up.MouseOptions = InjectedInputMouseOptions.LeftUp;
+        //    //var up = new InjectedInputMouseInfo();
+        //    //up.MouseOptions = InjectedInputMouseOptions.LeftUp;
 
-            //    //InputInjector inputInjector = InputInjector.TryCreate();
-            //    //inputInjector.InjectMouseInput(new[] { down, up });
-            //    Debug.WriteLine("gamepadsbutton A clicked");
-            //}
-            //else if (reading.Buttons.HasFlag(GamepadButtons.B) == true)
-            //{
-            //    //if (args.VirtualKey == VirtualKey.GamepadB)
-            //    //{
-            //    var down = new InjectedInputMouseInfo();
-            //    down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+        //    //InputInjector inputInjector = InputInjector.TryCreate();
+        //    //inputInjector.InjectMouseInput(new[] { down, up });
+        //    Debug.WriteLine("gamepadsbutton A clicked");
+        //}
+        //else if (reading.Buttons.HasFlag(GamepadButtons.B) == true)
+        //{
+        //    //if (args.VirtualKey == VirtualKey.GamepadB)
+        //    //{
+        //    var down = new InjectedInputMouseInfo();
+        //    down.MouseOptions = InjectedInputMouseOptions.LeftDown;
 
-            //    var up = new InjectedInputMouseInfo();
-            //    up.MouseOptions = InjectedInputMouseOptions.LeftUp;
+        //    var up = new InjectedInputMouseInfo();
+        //    up.MouseOptions = InjectedInputMouseOptions.LeftUp;
 
-            //    InputInjector inputInjector = InputInjector.TryCreate();
-            //    inputInjector.InjectMouseInput(new[] { down, up });
-            //    //}
-            //    Debug.WriteLine("gamepadsbutton B clicked");
-            //}
-            //else if (reading.Buttons.HasFlag(GamepadButtons.Y) == true)
-            //{
-            //    //if (args.VirtualKey == VirtualKey.GamepadY)
-            //    //{
-            //    var info = new InjectedInputMouseInfo();
-            //    //info.MouseOptions = InjectedInputMouseOptions.Move;
-            //    //info.DeltaY = -10;
-            //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-            //    unchecked
-            //    {
-            //        info.MouseData = (uint)+500; //scroll up
-            //    }
+        //    InputInjector inputInjector = InputInjector.TryCreate();
+        //    inputInjector.InjectMouseInput(new[] { down, up });
+        //    //}
+        //    Debug.WriteLine("gamepadsbutton B clicked");
+        //}
+        //else if (reading.Buttons.HasFlag(GamepadButtons.Y) == true)
+        //{
+        //    //if (args.VirtualKey == VirtualKey.GamepadY)
+        //    //{
+        //    var info = new InjectedInputMouseInfo();
+        //    //info.MouseOptions = InjectedInputMouseOptions.Move;
+        //    //info.DeltaY = -10;
+        //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
+        //    unchecked
+        //    {
+        //        info.MouseData = (uint)+500; //scroll up
+        //    }
 
-            //    InputInjector inputInjector = InputInjector.TryCreate();
-            //    inputInjector.InjectMouseInput(new[] { info });
-            //    Debug.WriteLine("gamepadsbutton Y wheel up");
-            //    //}
-            //}
-            //else if (reading.Buttons.HasFlag(GamepadButtons.X) == true)
-            //{
-            //    //if (args.VirtualKey == VirtualKey.GamepadA)
-            //    //{
-            //    var info = new InjectedInputMouseInfo();
-            //    //info.MouseOptions = InjectedInputMouseOptions.Move;
-            //    //info.DeltaY = 10;
-            //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-            //    unchecked
-            //    {
-            //        info.MouseData = (uint)-500; //scroll down
-            //    }
+        //    InputInjector inputInjector = InputInjector.TryCreate();
+        //    inputInjector.InjectMouseInput(new[] { info });
+        //    Debug.WriteLine("gamepadsbutton Y wheel up");
+        //    //}
+        //}
+        //else if (reading.Buttons.HasFlag(GamepadButtons.X) == true)
+        //{
+        //    //if (args.VirtualKey == VirtualKey.GamepadA)
+        //    //{
+        //    var info = new InjectedInputMouseInfo();
+        //    //info.MouseOptions = InjectedInputMouseOptions.Move;
+        //    //info.DeltaY = 10;
+        //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
+        //    unchecked
+        //    {
+        //        info.MouseData = (uint)-500; //scroll down
+        //    }
 
-            //    InputInjector inputInjector = InputInjector.TryCreate();
-            //    inputInjector.InjectMouseInput(new[] { info });
-            //    Debug.WriteLine("gamepadsbutton X wheel down");
-            //    //}
-            //}
-            ////if (args.VirtualKey == VirtualKey.GamepadB)
-            ////{
-            ////    args.Handled = false;
-            ////}
+        //    InputInjector inputInjector = InputInjector.TryCreate();
+        //    inputInjector.InjectMouseInput(new[] { info });
+        //    Debug.WriteLine("gamepadsbutton X wheel down");
+        //    //}
+        //}
+        ////if (args.VirtualKey == VirtualKey.GamepadB)
+        ////{
+        ////    args.Handled = false;
+        ////}
 
         //}
 
@@ -342,19 +375,19 @@ namespace _8bitdo_gamepad
 
         #endregion
 
-        private void mainpage_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void Mainpage_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             //if (e.OriginalKey == VirtualKey.Space)
             //{
-                Debug.WriteLine("Originalkey= " + e.OriginalKey);
+            Debug.WriteLine("Originalkey= " + e.OriginalKey);
             //}
             //if (e.Key == Windows.System.VirtualKey.Escape)
             //{
-                // do something or... nothing
-                //Debug.WriteLine(e.Handled);
-                //e.Handled = true;
-                //Debug.WriteLine(e.Handled);
-                Debug.WriteLine("key= " + e.Key);
+            // do something or... nothing
+            //Debug.WriteLine(e.Handled);
+            //e.Handled = true;
+            //Debug.WriteLine(e.Handled);
+            Debug.WriteLine("key= " + e.Key);
             //e.Handled = true;
             //}
 
