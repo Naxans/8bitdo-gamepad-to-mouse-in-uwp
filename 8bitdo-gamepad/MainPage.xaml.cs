@@ -155,9 +155,12 @@ namespace _8bitdo_gamepad
             //if (Gamepad.Gamepads.Count > 0)
             while (true)
             {
-
+                if (controller == null || Gamepad.Gamepads.Count <= 0)
+                {
+                    break;
+                }
                 controller = Gamepad.Gamepads.First();
-                if (controller == null) { break; }
+
                 reading = this.controller.GetCurrentReading();
 
                 // UI and the task run at different levels.
