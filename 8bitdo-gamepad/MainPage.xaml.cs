@@ -90,7 +90,7 @@ namespace _8bitdo_gamepad
             //public event TypedEventHandler<IGameController, Headset> HeadsetConnected
 
             //CoreWindow.GetForCurrentThread().KeyDown += mainpage_KeyDown;
-            //CoreWindow.GetForCurrentThread().KeyUp += mainpage_KeyUp;
+            CoreWindow.GetForCurrentThread().KeyUp += mainpage_KeyUp;
 
         }
         public static Size GetCurrentDisplaySize()
@@ -199,70 +199,26 @@ namespace _8bitdo_gamepad
 
                     if (reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone || reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone)
                     {
-                        Debug.WriteLine("x= " + (int)x + " y= " + (int)y);
+                        //Debug.WriteLine("x= " + (int)x + " y= " + (int)y);
                         info1 = new InjectedInputMouseInfo();
                         info1.MouseOptions = InjectedInputMouseOptions.Move;
                         if ((reading.LeftThumbstickX > Deadzone || reading.LeftThumbstickX < -Deadzone) && x >= 0 && x <= ScreenWidth)
                         {
-                            //info1 = new InjectedInputMouseInfo();
-                            //info1.MouseOptions = InjectedInputMouseOptions.Move;
                             info1.DeltaX = (int)(reading.LeftThumbstickX * 10);
-                            //InputInjector inputInjector = InputInjector.TryCreate();
-                            //inputInjector.InjectMouseInput(new[] { info1 });
-                            Debug.WriteLine("info.DeltaX  = " + info1.DeltaX);
+                            //Debug.WriteLine("info.DeltaX  = " + info1.DeltaX);
                         }
                         if ((reading.LeftThumbstickY > Deadzone || reading.LeftThumbstickY < -Deadzone) && y >= 0 && y <= ScreenHeight)
                         {
-                            //info1 = new InjectedInputMouseInfo();
-                            //info1.MouseOptions = InjectedInputMouseOptions.Move;
                             info1.DeltaY = (int)(-reading.LeftThumbstickY * 10);
-                            //InputInjector inputInjector = InputInjector.TryCreate();
-                            //inputInjector.InjectMouseInput(new[] { info1 });
-                            Debug.WriteLine("info.DeltaY = " + info1.DeltaY);
+                            //Debug.WriteLine("info.DeltaY = " + info1.DeltaY);
                         }
                         InputInjector inputInjector = InputInjector.TryCreate();
                         inputInjector.InjectMouseInput(new[] { info1 });
-                    }
-                    if (reading.Buttons.HasFlag(GamepadButtons.RightShoulder) == true)
-                    {
-                        var info = new InjectedInputMouseInfo();
-                        info.MouseOptions = InjectedInputMouseOptions.Wheel;
-                        unchecked
-                        {
-                            info.MouseData = (uint)+50; //scroll up
-                        }
-                        InputInjector inputInjector = InputInjector.TryCreate();
-                        inputInjector.InjectMouseInput(new[] { info });
-                        Debug.WriteLine("gamepadsbutton Y wheel up or down");
-                    }
-                    else if (reading.Buttons.HasFlag(GamepadButtons.LeftShoulder) == true)
-                    {
-                        var info = new InjectedInputMouseInfo();
-                        info.MouseOptions = InjectedInputMouseOptions.Wheel;
-                        unchecked
-                        {
-                            info.MouseData = (uint)-50; //scroll down
-                        }
-                        InputInjector inputInjector = InputInjector.TryCreate();
-                        inputInjector.InjectMouseInput(new[] { info });
-                        Debug.WriteLine("gamepadsbutton X wheel left or right");
-                    }
-                    else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
-                    {
-                        var down = new InjectedInputMouseInfo();
-                        down.MouseOptions = InjectedInputMouseOptions.LeftDown;
-                        var up = new InjectedInputMouseInfo();
-                        up.MouseOptions = InjectedInputMouseOptions.LeftUp;
-                        InputInjector inputInjector = InputInjector.TryCreate();
-                        inputInjector.InjectMouseInput(new[] { down, up });
-                        Debug.WriteLine("gamepadsbutton A pressed");
                     }
                 });
                 // delay while loop interval
                 await Task.Delay(DelayReadingGamepad);
             }
-
-
         }
 
         #region Helper methods
@@ -295,81 +251,50 @@ namespace _8bitdo_gamepad
         }
 
 
-        //private async void mainpage_KeyUp(CoreWindow sender, KeyEventArgs args)
-        //{
-        ////if (args.VirtualKey == VirtualKey.GamepadB)
-        ////    args.Handled = true;
+        private async void mainpage_KeyUp(CoreWindow sender, KeyEventArgs args)
+        {
+            if (reading.Buttons.HasFlag(GamepadButtons.RightShoulder) == true)
+            {
+                var info = new InjectedInputMouseInfo();
+                info.MouseOptions = InjectedInputMouseOptions.Wheel;
+                unchecked
+                {
+                    info.MouseData = (uint)+50; //scroll up
+                }
+                InputInjector inputInjector = InputInjector.TryCreate();
+                inputInjector.InjectMouseInput(new[] { info });
+                Debug.WriteLine("gamepadsbutton Y wheel up or down");
+            }
+            else if (reading.Buttons.HasFlag(GamepadButtons.LeftShoulder) == true)
+            {
+                var info = new InjectedInputMouseInfo();
+                info.MouseOptions = InjectedInputMouseOptions.Wheel;
+                unchecked
+                {
+                    info.MouseData = (uint)-50; //scroll down
+                }
+                InputInjector inputInjector = InputInjector.TryCreate();
+                inputInjector.InjectMouseInput(new[] { info });
+                Debug.WriteLine("gamepadsbutton X wheel left or right");
+            }
+            else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
+            {
+                var down = new InjectedInputMouseInfo();
+                down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+                var up = new InjectedInputMouseInfo();
+                up.MouseOptions = InjectedInputMouseOptions.LeftUp;
+                InputInjector inputInjector = InputInjector.TryCreate();
+                inputInjector.InjectMouseInput(new[] { down, up });
+                Debug.WriteLine("gamepadsbutton A pressed");
+            }
+            await Task.Delay(0);
+           
+            ////if (args.VirtualKey == VirtualKey.GamepadB)
+            ////{
+            ////    args.Handled = false;
+            ////}
 
-        //await Task.Delay(0);
-        //if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
-        //{
-        //    //var down = new InjectedInputMouseInfo();
-        //    //down.MouseOptions = InjectedInputMouseOptions.LeftDown;
-
-        //    //var up = new InjectedInputMouseInfo();
-        //    //up.MouseOptions = InjectedInputMouseOptions.LeftUp;
-
-        //    //InputInjector inputInjector = InputInjector.TryCreate();
-        //    //inputInjector.InjectMouseInput(new[] { down, up });
-        //    Debug.WriteLine("gamepadsbutton A clicked");
-        //}
-        //else if (reading.Buttons.HasFlag(GamepadButtons.B) == true)
-        //{
-        //    //if (args.VirtualKey == VirtualKey.GamepadB)
-        //    //{
-        //    var down = new InjectedInputMouseInfo();
-        //    down.MouseOptions = InjectedInputMouseOptions.LeftDown;
-
-        //    var up = new InjectedInputMouseInfo();
-        //    up.MouseOptions = InjectedInputMouseOptions.LeftUp;
-
-        //    InputInjector inputInjector = InputInjector.TryCreate();
-        //    inputInjector.InjectMouseInput(new[] { down, up });
-        //    //}
-        //    Debug.WriteLine("gamepadsbutton B clicked");
-        //}
-        //else if (reading.Buttons.HasFlag(GamepadButtons.Y) == true)
-        //{
-        //    //if (args.VirtualKey == VirtualKey.GamepadY)
-        //    //{
-        //    var info = new InjectedInputMouseInfo();
-        //    //info.MouseOptions = InjectedInputMouseOptions.Move;
-        //    //info.DeltaY = -10;
-        //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-        //    unchecked
-        //    {
-        //        info.MouseData = (uint)+500; //scroll up
-        //    }
-
-        //    InputInjector inputInjector = InputInjector.TryCreate();
-        //    inputInjector.InjectMouseInput(new[] { info });
-        //    Debug.WriteLine("gamepadsbutton Y wheel up");
-        //    //}
-        //}
-        //else if (reading.Buttons.HasFlag(GamepadButtons.X) == true)
-        //{
-        //    //if (args.VirtualKey == VirtualKey.GamepadA)
-        //    //{
-        //    var info = new InjectedInputMouseInfo();
-        //    //info.MouseOptions = InjectedInputMouseOptions.Move;
-        //    //info.DeltaY = 10;
-        //    info.MouseOptions = InjectedInputMouseOptions.Wheel;
-        //    unchecked
-        //    {
-        //        info.MouseData = (uint)-500; //scroll down
-        //    }
-
-        //    InputInjector inputInjector = InputInjector.TryCreate();
-        //    inputInjector.InjectMouseInput(new[] { info });
-        //    Debug.WriteLine("gamepadsbutton X wheel down");
-        //    //}
-        //}
-        ////if (args.VirtualKey == VirtualKey.GamepadB)
-        ////{
-        ////    args.Handled = false;
-        ////}
-
-        //}
+        }
 
 
 
