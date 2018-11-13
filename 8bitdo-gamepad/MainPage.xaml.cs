@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-//using Platform.Collections;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -47,6 +46,8 @@ namespace _8bitdo_gamepad
 
         Gamepad controller;
         GamepadReading reading;
+        InjectedInputMouseInfo info1;
+        InjectedInputMouseInfo down;
         //DispatcherTimer dispatcherTimer;
         //TimeSpan period = TimeSpan.FromMilliseconds(2);
 
@@ -72,10 +73,6 @@ namespace _8bitdo_gamepad
             ScaleWidth = (double)ScreenWidth / (DesignWidth * scaleFactor);
             ScaleHeight = (double)ScreenHeight / (DesignHeight * scaleFactor);
 
-
-
-
-
             this.InitializeComponent();
 
             //dispatcherTimer = new DispatcherTimer();
@@ -87,7 +84,6 @@ namespace _8bitdo_gamepad
             Gamepad.GamepadAdded += Gamepad_GamepadAdded;
             //public static event EventHandler<Gamepad> GamepadRemoved
             Gamepad.GamepadRemoved += Gamepad_GamepadRemoved;
-            //public event TypedEventHandler<IGameController, Headset> HeadsetConnected
 
             //CoreWindow.GetForCurrentThread().KeyDown += mainpage_KeyDown;
             CoreWindow.GetForCurrentThread().KeyUp += mainpage_KeyUp;
@@ -148,7 +144,6 @@ namespace _8bitdo_gamepad
 
         #endregion
 
-        InjectedInputMouseInfo info1;
         //private void dispatcherTimer_Tick(object sender, object e)
         private async void ReadingGamepad()
         {
@@ -224,7 +219,6 @@ namespace _8bitdo_gamepad
             }
         }
 
-        #region Helper methods
         private void ChangeVisibility(bool flag, UIElement elem)
         {
             if (flag)
@@ -241,7 +235,6 @@ namespace _8bitdo_gamepad
                 txtEvents.Text = DateTime.Now.ToString("hh:mm:ss.fff ") + txt + "\n" + txtEvents.Text;
             }
             );
-
         }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
@@ -266,7 +259,7 @@ namespace _8bitdo_gamepad
                 }
                 InputInjector inputInjector = InputInjector.TryCreate();
                 inputInjector.InjectMouseInput(new[] { info });
-                Debug.WriteLine("gamepadsbutton Y wheel up or down");
+                Debug.WriteLine("wheel up or down");
             }
             else if (reading.Buttons.HasFlag(GamepadButtons.LeftShoulder) == true)
             {
@@ -278,17 +271,32 @@ namespace _8bitdo_gamepad
                 }
                 InputInjector inputInjector = InputInjector.TryCreate();
                 inputInjector.InjectMouseInput(new[] { info });
-                Debug.WriteLine("gamepadsbutton X wheel left or right");
+                Debug.WriteLine("wheel left or right");
             }
-            else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
+            //else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
+            //{
+            //    var down = new InjectedInputMouseInfo();
+            //    down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+            //    var up = new InjectedInputMouseInfo();
+            //    up.MouseOptions = InjectedInputMouseOptions.LeftUp;
+            //    InputInjector inputInjector = InputInjector.TryCreate();
+            //    inputInjector.InjectMouseInput(new[] { down, up });
+            //    Debug.WriteLine("A pressed");
+            //}
+            if (GamepadButtons.A == (reading.Buttons & GamepadButtons.A))
             {
-                var down = new InjectedInputMouseInfo();
+                down = new InjectedInputMouseInfo();
                 down.MouseOptions = InjectedInputMouseOptions.LeftDown;
+                Debug.WriteLine("A pressed");
+            }
+            else if (GamepadButtons.None == (reading.Buttons & GamepadButtons.A) && down != null)
+            {
                 var up = new InjectedInputMouseInfo();
                 up.MouseOptions = InjectedInputMouseOptions.LeftUp;
                 InputInjector inputInjector = InputInjector.TryCreate();
                 inputInjector.InjectMouseInput(new[] { down, up });
-                Debug.WriteLine("gamepadsbutton A pressed");
+                Debug.WriteLine("A released");
+                down = null;
             }
             await Task.Delay(0);
            
@@ -296,13 +304,7 @@ namespace _8bitdo_gamepad
             ////{
             ////    args.Handled = false;
             ////}
-
         }
-
-
-
-        #endregion
-
         private void Mainpage_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             //if (e.OriginalKey == VirtualKey.Space)
@@ -318,7 +320,6 @@ namespace _8bitdo_gamepad
             Debug.WriteLine("key= " + e.Key);
             //e.Handled = true;
             //}
-
         }
 
         private void Mainpage_PointerMoved(object sender, PointerRoutedEventArgs e)
