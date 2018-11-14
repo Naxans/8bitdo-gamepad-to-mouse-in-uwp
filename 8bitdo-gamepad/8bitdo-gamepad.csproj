@@ -107,6 +107,7 @@
     <None Include="8bitdo-gamepad_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MyImages\down-arrow.png" />
     <Content Include="MyImages\sn30-controller.png" />
     <Content Include="MyImages\xbox-one-controller.png" />
     <Content Include="Properties\Default.rd.xml" />

@@ -88,6 +88,16 @@ namespace _8bitdo_gamepad
             //CoreWindow.GetForCurrentThread().KeyDown += mainpage_KeyDown;
             CoreWindow.GetForCurrentThread().KeyUp += mainpage_KeyUp;
 
+                //ElementSoundPlayer.Play(ElementSoundKind.Focus);
+
+            //show the button that has focus
+            this.GotFocus += (object sender, RoutedEventArgs e) =>
+            {
+                FrameworkElement focus = FocusManager.GetFocusedElement() as FrameworkElement;
+                Debug.WriteLine("got focus: " + focus.Name + " (" + focus.GetType().ToString() + ")");
+
+            };
+
         }
         public static Size GetCurrentDisplaySize()
         {
@@ -165,6 +175,38 @@ namespace _8bitdo_gamepad
                 {
                     pbLeftThumbstickX.Value = reading.LeftThumbstickX;
                     pbLeftThumbstickY.Value = reading.LeftThumbstickY;
+                    if (reading.LeftThumbstickX > 0.5)
+                    {
+                        ChangeVisibility(true, lbl8bitdoDPadRight); 
+                    }
+                    else
+                    {
+                        ChangeVisibility(false, lbl8bitdoDPadRight);
+                    }
+                    if (reading.LeftThumbstickX < -0.5)
+                    {
+                        ChangeVisibility(true, lbl8bitdoDPadLeft);
+                    }
+                    else
+                    {
+                        ChangeVisibility(false, lbl8bitdoDPadLeft);
+                    }
+                    if (reading.LeftThumbstickY > 0.5)
+                    {
+                        ChangeVisibility(true, lbl8bitdoDPadUp);
+                    }
+                    else
+                    {
+                        ChangeVisibility(false, lbl8bitdoDPadUp);
+                    }
+                    if (reading.LeftThumbstickY < -0.5)
+                    {
+                        ChangeVisibility(true, lbl8bitdoDPadDown);
+                    }
+                    else
+                    {
+                        ChangeVisibility(false, lbl8bitdoDPadDown);
+                    }
 
 
                     pbRightThumbstickX.Value = reading.RightThumbstickX;
@@ -175,19 +217,27 @@ namespace _8bitdo_gamepad
 
                     //https://msdn.microsoft.com/en-us/library/windows/apps/windows.gaming.input.gamepadbuttons.aspx
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.A), lblA);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.A), ell8bitdoB);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.B), lblB);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.B), ell8bitdoA);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.X), lblX);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.X), ell8bitdoY);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Y), lblY);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Y), ell8bitdoX);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Menu), lblMenu);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.Menu), lbl8bitdoStart);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadLeft), lblDPadLeft);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadRight), lblDPadRight);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadUp), lblDPadUp);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.DPadDown), lblDPadDown);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.View), lblView);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.View), lbl8bitdoSelect);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightThumbstick), ellRightThumbstick);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftThumbstick), ellLeftThumbstick);
                     ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftShoulder), rectLeftShoulder);
-                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightShoulder), recRightShoulder);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.LeftShoulder), rect8bitdoLS);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightShoulder), rectRightShoulder);
+                    ChangeVisibility(reading.Buttons.HasFlag(GamepadButtons.RightShoulder), rect8bitdoRS);
 
                     //// prevent the cursor from going outside the window of the app
                     //if (x < 0) { x = 0; }
@@ -259,7 +309,7 @@ namespace _8bitdo_gamepad
                 }
                 InputInjector inputInjector = InputInjector.TryCreate();
                 inputInjector.InjectMouseInput(new[] { info });
-                Debug.WriteLine("wheel up or down");
+                Debug.WriteLine("wheel up");
             }
             else if (reading.Buttons.HasFlag(GamepadButtons.LeftShoulder) == true)
             {
@@ -271,7 +321,7 @@ namespace _8bitdo_gamepad
                 }
                 InputInjector inputInjector = InputInjector.TryCreate();
                 inputInjector.InjectMouseInput(new[] { info });
-                Debug.WriteLine("wheel left or right");
+                Debug.WriteLine("wheel down");
             }
             //else if (reading.Buttons.HasFlag(GamepadButtons.A) == true)
             //{
@@ -334,6 +384,11 @@ namespace _8bitdo_gamepad
             {
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+
         }
 
         //protected override void OnNavigatedTo(NavigationEventArgs e)

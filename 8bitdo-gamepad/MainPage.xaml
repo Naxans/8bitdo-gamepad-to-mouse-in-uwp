@@ -10,69 +10,103 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <Grid x:Name="MainGrid" Background="#FFF9F8F8" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Canvas Width="400" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="100,10,0,0">
+                        <Image Source="MyImages/sn30-controller.png" Width="400" Height="400"/>
+                        <TextBlock HorizontalAlignment="Left" Height="15" Margin="0,0,0,0" Text="8BitDo SN30 Bluetooth Gamepad connected to a computer with Windows 10" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Center" Width="369" FontFamily="Global User Interface" FontSize="10" Canvas.Left="18" Canvas.Top="28" SelectionChanged="TextBlock_SelectionChanged" FontWeight="Bold" TextDecorations="Underline"/>
 
-            <!--<Canvas x:Name="MainCanvas">-->
-            <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Canvas Width="400" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="100,100,0,0">
-                    <Image Source="MyImages/sn30-controller.png" Width="400" Height="400"/>
-                    <Rectangle HorizontalAlignment="Left" Height="50" Margin="0,0,0,0" VerticalAlignment="Top" Width="10" Fill="Black" Canvas.Left="197" Canvas.Top="322"/>
-                    <Rectangle HorizontalAlignment="Left" Height="10" Margin="0,0,0,0" VerticalAlignment="Top" Width="50" Fill="Black" Canvas.Left="177" Canvas.Top="342"/>
-                    <TextBlock Name="lblA" FontSize="22" FontWeight="Bold" Foreground="#FF2CFD78" Visibility="Visible" Canvas.Left="320" Canvas.Top="194" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" FontFamily="Global User Interface">A</TextBlock>
-                    <TextBlock Name="lblB" FontSize="22" FontWeight="Bold" Foreground="#FFFD2C2C" Visibility="Visible" Canvas.Left="289" Canvas.Top="219" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global User Interface" Margin="0,0,0,0" >B</TextBlock>
-                    <TextBlock Name="lblY" FontSize="22" FontWeight="Bold" Foreground="#FFFF8B00" Visibility="Visible" Canvas.Left="258" Canvas.Top="195" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Global User Interface" Margin="0,0,0,0" >Y</TextBlock>
-                    <TextBlock Name="lblX" FontSize="22" FontWeight="Bold" Foreground="#FF0854F9" Visibility="Visible" Canvas.Left="289" Canvas.Top="170" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" FontFamily="Global User Interface" >X</TextBlock>
-                    <TextBlock Name="lblMenu" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="200" Canvas.Top="197" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >--</TextBlock>
-                    <TextBlock Name="lblDPadLeft" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="177" Canvas.Top="333" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" >o</TextBlock>
-                    <TextBlock Name="lblDPadRight" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="216" Canvas.Top="333" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" >o</TextBlock>
+                        <Ellipse Name="ell8bitdoA" Width="25" Height="25" Fill="#FF000000" Opacity="0.5" Canvas.Left="316" Canvas.Top="195" Visibility="Visible"/>
+                        <Ellipse Name="ell8bitdoB" Width="25" Height="25" Fill="#FF000000" Opacity="0.5" Canvas.Left="283" Canvas.Top="219" Visibility="Visible"/>
+                        <Ellipse Name="ell8bitdoX" Width="25" Height="25" Fill="#FF000000" Opacity="0.5" Canvas.Left="283" Canvas.Top="171" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Ellipse Name="ell8bitdoY" Width="25" Height="25" Fill="#FF000000" Opacity="0.5" Canvas.Left="251" Canvas.Top="195" Visibility="Visible"/>
+                        <Rectangle Name="rect8bitdoRS" Width="63" Height="9" Fill="#FF10121D" Opacity="0.9" Canvas.Left="271" Canvas.Top="128" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform Rotation="6.307"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        <Rectangle Name="rect8bitdoLS" Width="64" Height="8" Fill="#FF10121D" Opacity="0.9" Canvas.Left="72.75" Canvas.Top="128" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform Rotation="-6.307"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        <TextBlock Name="lbl8bitdoStart" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="200" Canvas.Top="197" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >--</TextBlock>
+                        <TextBlock Name="lbl8bitdoSelect" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="166" Canvas.Top="192" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" >...</TextBlock>
+                        <TextBlock Name="lbl8bitdoDPadLeft" FontSize="16" FontWeight="Bold" Foreground="White" Visibility="Visible" Canvas.Left="79" Canvas.Top="194" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" >o</TextBlock>
+                        <TextBlock Name="lbl8bitdoDPadRight" FontSize="16" FontWeight="Bold" Foreground="White" Visibility="Visible" Canvas.Left="118" Canvas.Top="194" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" >o</TextBlock>
 
-                    <TextBlock Name="lblDPadUp" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="197" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >o</TextBlock>
+                        <TextBlock Name="lbl8bitdoDPadUp" FontSize="16" FontWeight="Bold" Foreground="White" Visibility="Visible" Canvas.Left="101" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >o</TextBlock>
 
-                    <TextBlock Name="lblDPadDown" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="197" Canvas.Top="352" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >o</TextBlock>
-                    <TextBlock Name="lblView" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="168" Canvas.Top="206" Height="32" Width="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" FontFamily="Segoe UI" >¨¨</TextBlock>
+                        <TextBlock Name="lbl8bitdoDPadDown" FontSize="16" FontWeight="Bold" Foreground="White" Visibility="Visible" Canvas.Left="101" Canvas.Top="211" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" >o</TextBlock>
+                        <TextBlock HorizontalAlignment="Left" Height="15" Margin="0,0,0,0" Text="Mode = Windows X input" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="216" FontFamily="Global User Interface" FontSize="10" Canvas.Left="94" Canvas.Top="47" SelectionChanged="TextBlock_SelectionChanged"/>
 
-                    <Ellipse Name="ellRightThumbstick" Width="50" Height="50" Fill="#FFB43D3D" Opacity="0.5" Canvas.Left="277" Canvas.Top="322" Visibility="Visible"/>
-                    <Ellipse Name="ellLeftThumbstick" Width="50" Height="50" Fill="#FFB43D3D" Opacity="0.5" Canvas.Left="85" Canvas.Top="322" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Ellipse>
-                    <Rectangle Name="recRightShoulder" Width="63" Height="9" Fill="#FF10121D" Opacity="0.9" Canvas.Left="267" Canvas.Top="124" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Rectangle.RenderTransform>
-                            <CompositeTransform Rotation="5.534"/>
-                        </Rectangle.RenderTransform>
-                    </Rectangle>
-                    <Rectangle Name="rectLeftShoulder" Width="64" Height="8" Fill="#FF10121D" Opacity="0.9" Canvas.Left="68" Canvas.Top="125" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
-                        <Rectangle.RenderTransform>
-                            <CompositeTransform Rotation="-6.283"/>
-                        </Rectangle.RenderTransform>
-                    </Rectangle>
-
-                    <ProgressBar Name="pbLeftThumbstickX" Height="5" Minimum="-1" Maximum="1" Canvas.Left="91" Canvas.Top="344" Foreground="#FF00D74E" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
-                    <ProgressBar Name="pbLeftThumbstickY" Height="5" Minimum="-1" Maximum="1" Canvas.Left="92" Canvas.Top="345" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Foreground="#FF00D74E" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="Global User Interface" Margin="0,0,0,0" >
-                        <ProgressBar.RenderTransform>
-                            <CompositeTransform Rotation="-90"/>
-                        </ProgressBar.RenderTransform>
-                    </ProgressBar>
-
-                    <ProgressBar Name="pbRightThumbstickX" Height="5" Minimum="-1" Maximum="1" Canvas.Left="284" Canvas.Top="344" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
-                    <ProgressBar Name="pbRightThumbstickY" Height="5" Minimum="-1" Maximum="1" RenderTransformOrigin="0.5,0.5" Canvas.Left="285" Canvas.Top="345" UseLayoutRounding="False" d:LayoutRounding="Auto" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,0">
-                        <ProgressBar.RenderTransform>
-                            <CompositeTransform Rotation="-90"/>
-                        </ProgressBar.RenderTransform>
-                    </ProgressBar>
-
-                    <ProgressBar Name="pbLeftTrigger" Height="7" Minimum="0" Maximum="1" Canvas.Left="73" Canvas.Top="60" Foreground="#FF00D74E" FontFamily="Global User Interface" />
-                    <ProgressBar Name="pbRightTrigger" Height="7" Minimum="0" Maximum="1" Canvas.Left="293" Canvas.Top="60" Foreground="#FF0078D7" FontFamily="Segoe UI" />
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="55,42,0,0" Text="Xbox Left Trigger" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="84" FontFamily="Global User Interface" FontSize="10"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="273,42,0,0" Text="Xbox Right Trigger" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="84" FontFamily="Global User Interface" FontSize="10"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="55,302,0,0" Text="Xbox Left Thumbstick" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="108" FontFamily="Global User Interface" FontSize="10"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="243,302,0,0" Text="Xbox Right Thumbstick" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="119" FontFamily="Global User Interface" FontSize="10"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="171,302,0,0" Text="Xbox D-pad" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="62" FontFamily="Global User Interface" FontSize="10"/>
-
-                </Canvas>
+                    </Canvas>
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,200,0,0">Events:</TextBlock>
+                        <TextBlock Name="txtEvents" TextWrapping="WrapWholeWords" Width="400" Height="200" FontFamily="Segoe UI"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,0">Events:</TextBlock>
-                    <TextBlock Name="txtEvents" TextWrapping="WrapWholeWords" Width="400" Height="400" FontFamily="Segoe UI"></TextBlock>
+                    <Image Source="MyImages/down-arrow.png" Width="100" Height="100" HorizontalAlignment="Left" Margin="250,0,0,0"/>
                 </StackPanel>
 
+                <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Canvas Width="400" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="100,10,0,0">
+                        <Image Source="MyImages/xbox-one-controller.png" Width="400" Height="400"/>
+                        <TextBlock HorizontalAlignment="Left" Height="15" Margin="0,0,0,0" Text="Equivalent effect on a Xbox One Gamepad" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Center" Width="300" FontFamily="Global User Interface" FontSize="10" Canvas.Left="56" Canvas.Top="10" SelectionChanged="TextBlock_SelectionChanged" FontWeight="Bold" TextDecorations="Underline"/>
+
+
+                        <TextBlock Name="lblA" FontSize="36" FontWeight="Bold" Foreground="#FF2CFD78" Visibility="Visible" Canvas.Left="290" Canvas.Top="163" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Global User Interface">A</TextBlock>
+                        <TextBlock Name="lblB" FontSize="36" FontWeight="Bold" Foreground="#FFFD2C2C" Visibility="Visible" Canvas.Left="319" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Global User Interface" Margin="0,0,0,0" >B</TextBlock>
+                        <TextBlock Name="lblY" FontSize="36" FontWeight="Bold" Foreground="#FFFF8B00" Visibility="Visible" Canvas.Left="293" Canvas.Top="110" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Global User Interface" Margin="0,0,0,0" >Y</TextBlock>
+                        <TextBlock Name="lblX" FontSize="36" FontWeight="Bold" Foreground="#FF0854F9" Visibility="Visible" Canvas.Left="264" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" FontFamily="Global User Interface" >X</TextBlock>
+                        <TextBlock Name="lblMenu" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="220" Canvas.Top="136" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" >--</TextBlock>
+                        <TextBlock Name="lblDPadLeft" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="122" Canvas.Top="208" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" >o</TextBlock>
+                        <TextBlock Name="lblDPadRight" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="166" Canvas.Top="208" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" >o</TextBlock>
+
+                        <TextBlock Name="lblDPadUp" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="144" Canvas.Top="185" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" >o</TextBlock>
+
+                        <TextBlock Name="lblDPadDown" FontSize="16" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="144" Canvas.Top="229" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" >o</TextBlock>
+                        <TextBlock Name="lblView" FontSize="25" FontWeight="Bold" Foreground="#FFE9E7EE" Visibility="Visible" Canvas.Left="162" Canvas.Top="146" Height="32" Width="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" FontFamily="Segoe UI" >¨¨</TextBlock>
+
+                        <Ellipse Name="ellRightThumbstick" Width="50" Height="50" Fill="#FFB43D3D" Opacity="0.5" Canvas.Left="228" Canvas.Top="191" Visibility="Visible"/>
+                        <Ellipse Name="ellLeftThumbstick" Width="50" Height="50" Fill="#FFB43D3D" Opacity="0.5" Canvas.Left="72" Canvas.Top="133" Visibility="Visible"/>
+                        <Rectangle Name="rectRightShoulder" Width="63" Height="9" Fill="#FF10121D" Opacity="0.9" Canvas.Left="277" Canvas.Top="69" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform Rotation="17.104"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        <Rectangle Name="rectLeftShoulder" Width="64" Height="8" Fill="#FF10121D" Opacity="0.9" Canvas.Left="57" Canvas.Top="71.25" Visibility="Visible" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform Rotation="-18.836"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+
+                        <ProgressBar Name="pbLeftThumbstickX" Height="5" Minimum="-1" Maximum="1" Canvas.Left="78" Canvas.Top="156" Foreground="#FF00D74E" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                        <ProgressBar Name="pbLeftThumbstickY" Height="5" Minimum="-1" Maximum="1" Canvas.Left="78" Canvas.Top="157" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" Foreground="#FF00D74E" VerticalAlignment="Top" HorizontalAlignment="Left" FontFamily="Global User Interface" Margin="0,0,0,0" >
+                            <ProgressBar.RenderTransform>
+                                <CompositeTransform Rotation="-90"/>
+                            </ProgressBar.RenderTransform>
+                        </ProgressBar>
+
+                        <ProgressBar Name="pbRightThumbstickX" Height="5" Minimum="-1" Maximum="1" Canvas.Left="234" Canvas.Top="213" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0" />
+                        <ProgressBar Name="pbRightThumbstickY" Height="5" Minimum="-1" Maximum="1" RenderTransformOrigin="0.5,0.5" Canvas.Left="234" Canvas.Top="213" UseLayoutRounding="False" d:LayoutRounding="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
+                            <ProgressBar.RenderTransform>
+                                <CompositeTransform Rotation="-90"/>
+                            </ProgressBar.RenderTransform>
+                        </ProgressBar>
+
+                        <ProgressBar Name="pbLeftTrigger" Height="7" Minimum="0" Maximum="1" Canvas.Left="73" Canvas.Top="50" Foreground="#FF00D74E" FontFamily="Global User Interface" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" />
+                        <ProgressBar Name="pbRightTrigger" Height="7" Minimum="0" Maximum="1" Canvas.Left="293" Canvas.Top="46" Foreground="#FF0078D7" FontFamily="Segoe UI" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" />
+                        <TextBlock HorizontalAlignment="Center" Height="15" Margin="0,0,0,0" Text="Xbox Left Trigger" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="84" FontFamily="Global User Interface" FontSize="10" Canvas.Left="55" Canvas.Top="27"/>
+                        <TextBlock HorizontalAlignment="Center" Height="15" Margin="0,0,0,0" Text="Xbox Right Trigger" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Top" Width="84" FontFamily="Global User Interface" FontSize="10" Canvas.Left="273" Canvas.Top="25"/>
+
+
+                    </Canvas>
+
+
+                </StackPanel>
             </StackPanel>
-            <!--</Canvas>-->
 
             <Button x:Name="Button1" Content="Button1" HorizontalAlignment="Center" Height="178" Margin="0,974,0,0" VerticalAlignment="Top" Width="321" Click="Button1_Click"/>
             <Button x:Name="Button2" Content="Button2" HorizontalAlignment="Left" Height="178" Margin="1169,670,0,0" VerticalAlignment="Top" Width="321" Click="Button2_Click"/>
