@@ -53,7 +53,7 @@
                 <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Canvas Width="400" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="100,10,0,0">
                         <Image Source="MyImages/xbox-one-controller.png" Width="400" Height="400"/>
-                        <TextBlock HorizontalAlignment="Left" Height="15" Margin="0,0,0,0" Text="Equivalent effect on a Xbox One Gamepad" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Center" Width="300" FontFamily="Global User Interface" FontSize="10" Canvas.Left="56" Canvas.Top="10" SelectionChanged="TextBlock_SelectionChanged" FontWeight="Bold" TextDecorations="Underline"/>
+                        <TextBlock HorizontalAlignment="Left" Height="15" Margin="0,0,0,0" Text="Equivalent effect for a Xbox One Gamepad" TextWrapping="Wrap" HorizontalTextAlignment="Center" VerticalAlignment="Center" Width="300" FontFamily="Global User Interface" FontSize="10" Canvas.Left="56" Canvas.Top="10" SelectionChanged="TextBlock_SelectionChanged" FontWeight="Bold" TextDecorations="Underline"/>
 
 
                         <TextBlock Name="lblA" FontSize="36" FontWeight="Bold" Foreground="#FF2CFD78" Visibility="Visible" Canvas.Left="290" Canvas.Top="163" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" FontFamily="Global User Interface">A</TextBlock>
